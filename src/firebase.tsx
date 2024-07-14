@@ -5,16 +5,17 @@ import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import {createUserWithEmailAndPassword } from "firebase/auth";
 
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBkCIvu7puKTKNYNENjbd5pxwR6veD5KNg",
-  authDomain: "cut2fit-8d358.firebaseapp.com",
-  projectId: "cut2fit-8d358",
-  storageBucket: "cut2fit-8d358.appspot.com",
-  messagingSenderId: "768164009915",
-  appId: "1:768164009915:web:ee5fee020d357ec3ae569e"
+  apiKey: "AIzaSyDRjA7UkNsfhn5rGqoqo71TixJ4CwrqSAo",
+  authDomain: "lunawave-crest-hospital.firebaseapp.com",
+  projectId: "lunawave-crest-hospital",
+  storageBucket: "lunawave-crest-hospital.appspot.com",
+  messagingSenderId: "5931628297",
+  appId: "1:5931628297:web:9fd931144424f6bbf1c5d8"
 };
 
   
@@ -35,4 +36,4 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-export { app, analytics, auth, firestore, storage, getAuth, db, onAuthStateChanged };
+export { app, analytics, auth, firestore, storage, getAuth, db, onAuthStateChanged , createUserWithEmailAndPassword};

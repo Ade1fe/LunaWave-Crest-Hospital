@@ -1,4 +1,6 @@
-// export {default as FindDoctors} 
+// export {default as Signup} 
+export {default as Signup}  from './auth/Signup';
+export {default as SearchDoctors}  from './finddoctors/SearchDoctors';
 export {default as FindDoctors}  from '../Components/finddoctors/FindDoctors';
 export {default as SomethingIs}  from '../adverts/SomethingIs';
 export {default as Map}  from './Map';
