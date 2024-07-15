@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { getAuth, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase';
-import { HomePage } from './pages';
+import { HomePage, ProfilePage } from './pages';
 import { Login, SearchDoctors, Signup } from './Components';
 
 
@@ -48,6 +48,7 @@ const AppRouter = () => {
     { path: '/doctors', element: <SearchDoctors /> },
     { path: '/login', element: <Login /> },
     { path: '/Signup', element: <Signup /> },
+    { path: '/Profile', element: <ProfilePage /> },
   ];
 
   // Create browser router with routes

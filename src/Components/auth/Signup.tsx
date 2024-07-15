@@ -73,6 +73,7 @@ import {
                 email,
                 name,
                 uid: user.uid,
+                specialization,
             });
             toast({
               title: 'Account created.',
