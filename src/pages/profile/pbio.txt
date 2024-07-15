@@ -1,13 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Box, Image, Text, Button, Input, Avatar, Textarea, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Image, Text, Button, Input, Avatar, Textarea, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Icon } from '@chakra-ui/react';
 import { auth, db, storage } from '../../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import { CgProfile } from 'react-icons/cg';
+import { FcAbout } from 'react-icons/fc';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { MdOutlineEmail, MdOutlinePhone } from 'react-icons/md';
 
 interface Service {
   service: string;
   price: number;
+}
+
+interface Experience {
+  workplace: string;
+  position: string;
+  workLocation: string;
+  startYear: string;
+  endYear: string;
 }
 
 const ProfileBio = () => {
@@ -21,7 +33,8 @@ const ProfileBio = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [editMode, setEditMode] = useState(false);
-  const [services, setServices] = useState<Service[]>([]); // Updated to use Service interface
+  const [services, setServices] = useState<Service[]>([]);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -68,7 +81,11 @@ const ProfileBio = () => {
       const doctorDocRef = doc(db, 'doctors', uid);
       const doctorDoc = await getDoc(doctorDocRef);
       if (doctorDoc.exists()) {
-        setDoctorData(doctorDoc.data());
+        const doctorData = doctorDoc.data();
+        setDoctorData(doctorData);
+        if (doctorData.experiences) {
+          setExperiences(doctorData.experiences);
+        }
       } else {
         console.log('No such document in doctors collection!');
       }
@@ -106,9 +123,9 @@ const ProfileBio = () => {
     }
   };
 
-  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBio(e.target.value);
-  };
+  // const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   setBio(e.target.value);
+  // };
 
   const handleFieldChange = async (field: string, value: any) => {
     if (user) {
@@ -127,7 +144,6 @@ const ProfileBio = () => {
 
   const handleServiceChange = (index: number, key: keyof Service, value: string | number) => {
     const updatedServices = [...services];
-    // Ensure `key` is either 'service' or 'price'
     if (key === 'service') {
       updatedServices[index].service = value as string;
     } else if (key === 'price') {
@@ -146,6 +162,32 @@ const ProfileBio = () => {
     setServices(updatedServices);
   };
 
+  const handleExperienceChange = (index: number, key: keyof Experience, value: string) => {
+    const updatedExperiences = [...experiences];
+    if (key === 'workplace') {
+      updatedExperiences[index].workplace = value;
+    } else if (key === 'position') {
+      updatedExperiences[index].position = value;
+    } else if (key === 'workLocation') {
+      updatedExperiences[index].workLocation = value;
+    } else if (key === 'startYear') {
+      updatedExperiences[index].startYear = value;
+    } else if (key === 'endYear') {
+      updatedExperiences[index].endYear = value;
+    }
+    setExperiences(updatedExperiences);
+  };
+
+  const handleAddExperience = () => {
+    setExperiences([...experiences, { workplace: '', position: '', workLocation: '', startYear: '', endYear: '' }]);
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    const updatedExperiences = [...experiences];
+    updatedExperiences.splice(index, 1);
+    setExperiences(updatedExperiences);
+  };
+
   const saveChanges = async () => {
     if (editMode) {
       try {
@@ -155,8 +197,9 @@ const ProfileBio = () => {
           handleFieldChange('phoneNumber', phoneNumber),
           handleFieldChange('address', address),
           saveServicesToFirestore(),
+          saveExperiencesToFirestore(),
         ]);
-        setEditMode(false); // Exit edit mode after saving changes
+        setEditMode(false);
       } catch (error) {
         console.error('Error saving changes:', error);
       }
@@ -167,9 +210,20 @@ const ProfileBio = () => {
     if (user) {
       try {
         const userDocRef = doc(db, 'users', user.uid);
-        await updateDoc(userDocRef, { services: services });
+        await updateDoc(userDocRef, { services });
       } catch (error) {
         console.error('Error saving services:', error);
+      }
+    }
+  };
+
+  const saveExperiencesToFirestore = async () => {
+    if (user) {
+      try {
+        const doctorDocRef = doc(db, 'doctors', user.uid);
+        await updateDoc(doctorDocRef, { experiences });
+      } catch (error) {
+        console.error('Error saving experiences:', error);
       }
     }
   };
@@ -178,8 +232,13 @@ const ProfileBio = () => {
     <Box>
       {userData ? (
         <>
-          <Box display={['block', 'flex']} gap="3" alignItems="center">
-            <Box>
+         
+         <Box display="grid" pos='relative' maxW='1600px' mx='auto' mb='6rem'>
+         <Box bg='red' h='250px' className="" w='full'>
+              <Image w='full' h='full' objectFit='cover' src='https://pbs.twimg.com/profile_banners/1506565313751564289/1674381564/1500x500' />
+            </Box>
+            <Box display={['block', 'flex']} gap="3" alignItems="center" pos='absolute' bottom='-70px' left='50px'>
+            <Box bg='green'>
               {userData.imageUrl ? (
                 <Image borderRadius="full" boxSize="150px" src={userData.imageUrl} alt="Profile Image" />
               ) : (
@@ -192,12 +251,14 @@ const ProfileBio = () => {
                 {loading ? 'Loading...' : 'Upload Image'}
               </Button>
             </Box>
+         </Box>
+           
           </Box>
           <Text fontSize={['md', 'lg', 'xl']} fontWeight="bold">
             {userData.name}
           </Text>
           {userData.role === 'doctor' && doctorData && (
-            <>
+            <Box w={['70%']} bg='yellow'>
               <Text>Specialization: {doctorData.specialization}</Text>
               <Text>Role: {userData.role}</Text>
               <Text>Code: {doctorData.code}</Text>
@@ -285,6 +346,75 @@ const ProfileBio = () => {
                       Add Service
                     </Button>
                   </TableContainer>
+                  <TableContainer mt={4}>
+                    <Text>Experience List</Text>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>Workplace</Th>
+                          <Th>Position</Th>
+                          <Th>Location</Th>
+                          <Th>Start Year</Th>
+                          <Th>End Year</Th>
+                          <Th>Action</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {experiences.map((experience, index) => (
+                          <Tr key={index}>
+                            <Td>
+                              <Input
+                                type="text"
+                                value={experience.workplace}
+                                onChange={(e) => handleExperienceChange(index, 'workplace', e.target.value)}
+                                placeholder="Enter workplace"
+                              />
+                            </Td>
+                            <Td>
+                              <Input
+                                type="text"
+                                value={experience.position}
+                                onChange={(e) => handleExperienceChange(index, 'position', e.target.value)}
+                                placeholder="Enter position"
+                              />
+                            </Td>
+                            <Td>
+                              <Input
+                                type="text"
+                                value={experience.workLocation}
+                                onChange={(e) => handleExperienceChange(index, 'workLocation', e.target.value)}
+                                placeholder="Enter location"
+                              />
+                            </Td>
+                            <Td>
+                              <Input
+                                type="text"
+                                value={experience.startYear}
+                                onChange={(e) => handleExperienceChange(index, 'startYear', e.target.value)}
+                                placeholder="Enter start year"
+                              />
+                            </Td>
+                            <Td>
+                              <Input
+                                type="text"
+                                value={experience.endYear}
+                                onChange={(e) => handleExperienceChange(index, 'endYear', e.target.value)}
+                                placeholder="Enter end year"
+                              />
+                            </Td>
+                            <Td>
+                              <Button size="sm" onClick={() => handleRemoveExperience(index)}>
+                                Remove
+                              </Button>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                    <Button size="sm" onClick={handleAddExperience}>
+                      Add Experience
+                    </Button>
+                  </TableContainer>
                 </>
               ) : (
                 <>
@@ -311,19 +441,42 @@ const ProfileBio = () => {
                       </Tbody>
                     </Table>
                   </TableContainer>
+                  <TableContainer mt={4}>
+                    <Text>Experience List</Text>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>Workplace</Th>
+                          <Th>Position</Th>
+                          <Th>Location</Th>
+                          <Th>Years Worked</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {experiences.map((experience, index) => (
+                          <Tr key={index}>
+                            <Td>{experience.workplace}</Td>
+                            <Td>{experience.position}</Td>
+                            <Td>{experience.workLocation}</Td>
+                            <Td>{`${experience.startYear} - ${experience.endYear}`}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
                 </>
               )}
-            </>
+            </Box>
           )}
           {userData.role === 'patient' && (
             <>
-              <Text fontSize={['sm', 'md', 'lg']} color="gray.500">
+              <Text w={['50%']} bg='blue' fontSize={['sm', 'md', 'lg']} color="gray.500">
                 {userData.role}
               </Text>
-              <Text>Email: {userData.email}</Text>
+              <Text w={['50%']} bg='blue' fontSize={['sm','md']} fontWeight='500' display='flex' alignItems='center' gap='2'><Icon as={MdOutlineEmail} boxSize={[4,5,6]} /> {userData.email}</Text>
               {editMode ? (
-                <>
-                  <Box>
+                <Box fontSize={['sm','md']} fontWeight='500' w={['50%']} bg='blue'>
+                  <Box mb='4'>
                     <Text>Age</Text>
                     <Input
                       type="number"
@@ -333,17 +486,17 @@ const ProfileBio = () => {
                       placeholder="Enter your age"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Phone Number</Text>
                     <Input
                       type="tel"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       onBlur={() => handleFieldChange('phoneNumber', phoneNumber)}
-                      placeholder="Enter your phone number"
+                      placeholder="+23490386013"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Address</Text>
                     <Input
                       type="text"
@@ -353,7 +506,7 @@ const ProfileBio = () => {
                       placeholder="Enter your address"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Bio</Text>
                     <Textarea
                       value={bio}
@@ -362,14 +515,15 @@ const ProfileBio = () => {
                       placeholder="Enter your bio"
                     />
                   </Box>
-                </>
+                </Box>
               ) : (
-                <>
-                  <Text>Age: {age}</Text>
-                  <Text>Phone Number: {phoneNumber}</Text>
-                  <Text>Address: {address}</Text>
-                  <Text>Bio: {bio}</Text>
-                </>
+                <Box fontSize={['sm','md']} fontWeight='500' w={['50%']} bg='blue'>
+                   <Text mb='3' display='flex' alignItems='center' gap='2'>  {bio}</Text>
+                  <Text mb='3' display='flex' alignItems='center' gap='2'> <Icon as={CgProfile} boxSize={[4,5,6]} /> {age}</Text>
+                  <Text mb='3' display='flex' alignItems='center' gap='2'> <Icon as={MdOutlinePhone} boxSize={[4,5,6]} />  {phoneNumber}</Text>
+                  <Text mb='3' display='flex' alignItems='center' w='full' bg='green' gap='2' > <Icon as={FaMapMarkerAlt} boxSize={[4,5,6]} />  {address}</Text>
+                 
+                </Box>
               )}
             </>
           )}

@@ -1,4 +1,5 @@
-// export {default as Signup} 
+// export {default as AdvertComp} 
+export {default as AdvertComp}  from '../adverts/AdvertComp';
 export {default as Signup}  from './auth/Signup';
 export {default as SearchDoctors}  from './finddoctors/SearchDoctors';
 export {default as FindDoctors}  from '../Components/finddoctors/FindDoctors';

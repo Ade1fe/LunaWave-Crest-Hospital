@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Box, Image, Text, Button, Input, Avatar, Textarea, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Image, Text, Button, Input, Avatar, Textarea, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Icon } from '@chakra-ui/react';
 import { auth, db, storage } from '../../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import { CgProfile } from 'react-icons/cg';
+import { FcAbout } from 'react-icons/fc';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { MdOutlineEmail, MdOutlinePhone } from 'react-icons/md';
 
 interface Service {
   service: string;
@@ -228,8 +232,13 @@ const ProfileBio = () => {
     <Box>
       {userData ? (
         <>
-          <Box display={['block', 'flex']} gap="3" alignItems="center">
-            <Box>
+         
+         <Box display="grid" pos='relative' maxW='1600px' mx='auto' mb='6rem'>
+         <Box bg='red' h='250px' className="" w='full'>
+              <Image w='full' h='full' objectFit='cover' src='https://pbs.twimg.com/profile_banners/1506565313751564289/1674381564/1500x500' />
+            </Box>
+            <Box display={['block', 'flex']} gap="3" alignItems="center" pos='absolute' bottom='-70px' left='50px'>
+            <Box bg='green'>
               {userData.imageUrl ? (
                 <Image borderRadius="full" boxSize="150px" src={userData.imageUrl} alt="Profile Image" />
               ) : (
@@ -242,12 +251,14 @@ const ProfileBio = () => {
                 {loading ? 'Loading...' : 'Upload Image'}
               </Button>
             </Box>
+         </Box>
+           
           </Box>
           <Text fontSize={['md', 'lg', 'xl']} fontWeight="bold">
             {userData.name}
           </Text>
           {userData.role === 'doctor' && doctorData && (
-            <>
+            <Box w={['70%']} bg='yellow'>
               <Text>Specialization: {doctorData.specialization}</Text>
               <Text>Role: {userData.role}</Text>
               <Text>Code: {doctorData.code}</Text>
@@ -455,17 +466,17 @@ const ProfileBio = () => {
                   </TableContainer>
                 </>
               )}
-            </>
+            </Box>
           )}
           {userData.role === 'patient' && (
             <>
-              <Text fontSize={['sm', 'md', 'lg']} color="gray.500">
+              <Text w={['50%']} bg='blue' fontSize={['sm', 'md', 'lg']} color="gray.500">
                 {userData.role}
               </Text>
-              <Text>Email: {userData.email}</Text>
+              <Text w={['50%']} bg='blue' fontSize={['sm','md']} fontWeight='500' display='flex' alignItems='center' gap='2'><Icon as={MdOutlineEmail} boxSize={[4,5,6]} /> {userData.email}</Text>
               {editMode ? (
-                <>
-                  <Box>
+                <Box fontSize={['sm','md']} fontWeight='500' w={['50%']} bg='blue'>
+                  <Box mb='4'>
                     <Text>Age</Text>
                     <Input
                       type="number"
@@ -475,17 +486,17 @@ const ProfileBio = () => {
                       placeholder="Enter your age"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Phone Number</Text>
                     <Input
                       type="tel"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       onBlur={() => handleFieldChange('phoneNumber', phoneNumber)}
-                      placeholder="Enter your phone number"
+                      placeholder="+23490386013"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Address</Text>
                     <Input
                       type="text"
@@ -495,7 +506,7 @@ const ProfileBio = () => {
                       placeholder="Enter your address"
                     />
                   </Box>
-                  <Box>
+                  <Box mb='4'>
                     <Text>Bio</Text>
                     <Textarea
                       value={bio}
@@ -504,14 +515,15 @@ const ProfileBio = () => {
                       placeholder="Enter your bio"
                     />
                   </Box>
-                </>
+                </Box>
               ) : (
-                <>
-                  <Text>Age: {age}</Text>
-                  <Text>Phone Number: {phoneNumber}</Text>
-                  <Text>Address: {address}</Text>
-                  <Text>Bio: {bio}</Text>
-                </>
+                <Box fontSize={['sm','md']} fontWeight='500' w={['50%']} bg='blue'>
+                   <Text mb='3' display='flex' alignItems='center' gap='2'>  {bio}</Text>
+                  <Text mb='3' display='flex' alignItems='center' gap='2'> <Icon as={CgProfile} boxSize={[4,5,6]} /> {age}</Text>
+                  <Text mb='3' display='flex' alignItems='center' gap='2'> <Icon as={MdOutlinePhone} boxSize={[4,5,6]} />  {phoneNumber}</Text>
+                  <Text mb='3' display='flex' alignItems='center' w='full' bg='green' gap='2' > <Icon as={FaMapMarkerAlt} boxSize={[4,5,6]} />  {address}</Text>
+                 
+                </Box>
               )}
             </>
           )}
