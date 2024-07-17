@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from '../../Layout/MainLayout';
-import { collection, getDocs, query, where, startAt, endAt } from 'firebase/firestore';
-import { db } from '../../firebase'; // Adjust this import based on your Firebase configuration file
+import { collection, getDocs} from 'firebase/firestore';
+import { db } from '../../firebase'; 
 import { Box, Text, Spinner, List, ListItem, Button, InputGroup, Input } from '@chakra-ui/react';
 
 interface Doctor {
@@ -17,25 +17,22 @@ const SearchDoctors: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const queryParam = new URLSearchParams(location.search).get('query');
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDoctors = async () => {
       setLoading(true);
       try {
-        let q;
-        if (queryParam) {
-          q = query(
-            collection(db, 'doctors'),
-            where('name', '>=', queryParam),
-            where('name', '<=', queryParam + '\uf8ff')
-          );
-        } else {
-          q = collection(db, 'doctors');
-        }
-
+        const q = collection(db, 'doctors');
         const querySnapshot = await getDocs(q);
         const doctorsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Doctor[];
-        setDoctors(doctorsList);
+
+        // Filter doctors based on case-insensitive search
+        const filteredDoctors = doctorsList.filter(doctor =>
+          doctor.name.toLowerCase().includes(queryParam?.toLowerCase() ?? '')
+        );
+
+        setDoctors(filteredDoctors);
       } catch (error) {
         console.error('Error fetching doctors:', error);
       }
@@ -56,7 +53,7 @@ const SearchDoctors: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button colorScheme="teal" ml={2} >
+          <Button  _hover={{bg: "orange.800"}} color='white' bg="#541e1b" colorScheme="teal" ml={2}  onClick={() => navigate(`/doctors?query=${encodeURIComponent(searchQuery)}`)}>
             Search
           </Button>
         </InputGroup>

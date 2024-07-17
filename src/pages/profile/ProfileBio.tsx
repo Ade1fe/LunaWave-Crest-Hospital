@@ -11,12 +11,12 @@ import { MdOutlineEmail, MdOutlinePhone } from 'react-icons/md';
 import { AdvertComp } from '../../Components';
 import { SlCalender } from 'react-icons/sl';
 
-interface Service {
+export interface Service {
   service: string;
   price: number;
 }
 
-interface Experience {
+export interface Experience {
   workplace: string;
   position: string;
   workLocation: string;

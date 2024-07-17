@@ -4,10 +4,13 @@ import MainLayout from '../../Layout/MainLayout';
 import { collection, getDocs} from 'firebase/firestore';
 import { db } from '../../firebase'; 
 import { Box, Text, Spinner, List, ListItem, Button, InputGroup, Input } from '@chakra-ui/react';
+import { AdvertComp } from '..';
 
 interface Doctor {
+  specialization: string;
   id: string;
   name: string;
+  workLocation: string;
   // Add other relevant fields
 }
 
@@ -31,6 +34,8 @@ const SearchDoctors: React.FC = () => {
         const filteredDoctors = doctorsList.filter(doctor =>
           doctor.name.toLowerCase().includes(queryParam?.toLowerCase() ?? '')
         );
+        console.log(doctors,"doctors")
+        console.log(doctorsList,"doctorsList")
 
         setDoctors(filteredDoctors);
       } catch (error) {
@@ -41,6 +46,10 @@ const SearchDoctors: React.FC = () => {
 
     fetchDoctors();
   }, [queryParam]);
+
+  const makeAnAppointment = (doctorId: string) => {
+    navigate(`/requestappointment?query=${encodeURIComponent(doctorId)}`);
+  };
 
   return (
     <MainLayout>
@@ -61,19 +70,29 @@ const SearchDoctors: React.FC = () => {
         {loading ? (
           <Spinner size="xl" />
         ) : (
-          <Box>
+       
+          <Box display={['block', 'block', 'flex']} gap='4' alignItems='flex-start'className="">
+   <Box  w={['100%', '100%', "60%"]}>
             {doctors.length > 0 ? (
               <List spacing={3}>
                 {doctors.map((doctor) => (
-                  <ListItem key={doctor.id}>
-                    <Text fontSize="lg">{doctor.name}</Text>
-                    {/* Add more doctor details as needed */}
+                  <ListItem key={doctor.id} bg='red' my='3' display='flex' justifyContent='space-between' px={['3']}>
+                   <div className="">
+                   <Text fontSize="lg">{doctor.name}</Text>
+                    <Text fontSize="lg">{doctor.specialization}</Text>
+                    <Text fontSize="lg">{doctor.workLocation}</Text>
+                   </div>
+                   <Box onClick={() => makeAnAppointment(doctor.id)}>
+                        <Text fontSize="lg" cursor="pointer">Make An Appointment</Text>
+                      </Box>
                   </ListItem>
                 ))}
               </List>
             ) : (
               <Text>No doctors found for "{queryParam}".</Text>
             )}
+          </Box>
+<AdvertComp />
           </Box>
         )}
       </Box>
