@@ -1,4 +1,5 @@
-// export {default as AdvertComp} 
+// export {default as BackPage} 
+export {default as BackPage} from './BackPage';
 export {default as AdvertComp}  from '../adverts/AdvertComp';
 export {default as Signup}  from './auth/Signup';
 export {default as SearchDoctors}  from './finddoctors/SearchDoctors';

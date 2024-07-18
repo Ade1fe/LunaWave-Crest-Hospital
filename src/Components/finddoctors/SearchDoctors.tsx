@@ -4,7 +4,7 @@ import MainLayout from '../../Layout/MainLayout';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase'; 
 import { Box, Text, Spinner, List, ListItem, Image, Button, Input, InputGroup, Avatar, Icon } from '@chakra-ui/react';
-import { AdvertComp } from '..';
+import { AdvertComp, SomethingIs } from '..';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 interface Doctor {
@@ -28,7 +28,7 @@ const SearchDoctors: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const doctorsPerPage = 1; // Number of doctors to display per page
+  const doctorsPerPage = 5; // Number of doctors to display per page
 
   // Fetch user images separately
   useEffect(() => {
@@ -194,7 +194,7 @@ const SearchDoctors: React.FC = () => {
 
   return (
     <MainLayout>
-      <Box p={4}>
+      <Box p={4} maxW='1430px' mx='auto' className='texts'>
         <Box mb={4}>
           <InputGroup size={['sm', 'md']}>
             <Input
@@ -213,26 +213,26 @@ const SearchDoctors: React.FC = () => {
         {loading ? (
           <Spinner size="xl" />
         ) : (
-          <Box display={['block', 'block', 'flex']} gap='4' alignItems='flex-start'>
-            <Box w={['100%', '100%', "60%"]}>
+          <Box display={['block', 'block', 'flex']} justifyContent='space-between' gap='4' alignItems='flex-start'>
+            <Box w={['100%', '90%','80%', "50%"]}>
               {currentDoctors.length > 0 ? (
                 <List spacing={3}>
                   {currentDoctors.map((doctor) => (
-                    <ListItem key={doctor.id} bg='red' my='3' display='flex' justifyContent='space-between' px={['3']}>
-                      <Box display={['flex']} alignItems='center' gap='2'>
+                    <ListItem  p='4' key={doctor.id} borderBottomWidth='1px' borderBottomColor="gray.200" mb='2rem' display='flex' justifyContent='space-between' alignItems='flex-start' px={['3']}>
+                      <Box display={['flex']}  flexDir={['column','column','row']} alignItems='center' gap='2'>
                         {doctor.imageUrl ? (
-                          <Image boxSize={['150px']} borderRadius='50%' src={doctor.imageUrl} alt="Doctor Image" />
+                          <Image boxSize={['150px','160px','130px','120px',"120px"]} borderRadius='50%' src={doctor.imageUrl} alt="Doctor Image" />
                         ) : (
-                          <Avatar boxSize={['150px']} name={doctor.name} size="md" />
+                          <Avatar boxSize={['150px','160px','140px','130px','120px']} name={doctor.name} size="md" />
                         )}
-                        <div className="">
-                          <Text fontSize="lg">{doctor.name}</Text>
-                          <Text fontSize="lg">{doctor.specialization}</Text>
-                          <Text fontSize="lg">{doctor.workLocation}</Text>
-                        </div>
+                        <Box  fontSize={[ 'md', "lg"]} className="">
+                          <Text fontWeight='900'>{doctor.name}</Text>
+                          <Text color='f9f9f9' fontSize={['xs','sm']} fontWeight='400'>{doctor.specialization}</Text>
+                          <Text  fontWeight='300' fontSize={['sm','md']}>{doctor.workLocation}</Text>
+                        </Box>
                       </Box>
-                      <Box onClick={() => makeAnAppointment(doctor.id)}>
-                        <Text fontSize="lg" cursor="pointer">Make An Appointment</Text>
+                      <Box py='2' px='4' shadow='md' borderRadius='md' fontSize={['xs','sm']} onClick={() => makeAnAppointment(doctor.id)} mt='1rem'>
+                        <Text  cursor="pointer">Make An Appointment</Text>
                       </Box>
                     </ListItem>
                   ))}
@@ -241,13 +241,20 @@ const SearchDoctors: React.FC = () => {
                 <Text>No doctors found for "{queryParam}".</Text>
               )}
             </Box>
-            <AdvertComp />
+            <Box w={['85%', '70%', '50%',  "30%"]} mx='auto'>
+         <Box w='full' className="">
+         <AdvertComp />
+         </Box>
+           <Box className="">
+           <SomethingIs />
+           </Box>
+          </Box>
           </Box>
         )}
 
         {/* Pagination */}
         {doctors.length > doctorsPerPage && (
-          <Box mt={4} display="flex" justifyContent="center" alignItems="center">
+          <Box mt='3rem' display="flex" justifyContent="center" alignItems="center">
             <Button
               onClick={handlePrevPage}
               disabled={currentPage === 1}

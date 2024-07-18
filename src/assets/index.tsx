@@ -1,0 +1,1 @@
+export {default as imgImg} from './7294038.jpg';

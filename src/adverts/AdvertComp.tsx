@@ -52,8 +52,9 @@ const AdvertComp = () => {
   ];
 
   return (
-    <Box w={[ '90%', '80%', '40%']} mx={['auto', 'auto', '0']} mt={['2rem', '2.5rem', '0']}>
-      <Flex direction="column" align="center" justify="center">
+    // <Box w={[ '90%', '80%', '40%']} mx={['auto', 'auto', '0']} mt={['2rem', '2.5rem', '0']}>
+    <Box className='texts'>
+      <Flex direction="column" align="center" justify="center" >
         {adverts.map((advert, index) => (
           <Box
             key={index}
@@ -69,7 +70,7 @@ const AdvertComp = () => {
             display={currentAdvert === index ? 'block' : 'none'}
           >
             <VStack align="start" spacing={1} fontSize={['xs', 'sm']}>
-              <Heading size={['sm', 'md', "lg"]}>{advert.title}</Heading>
+              <Text fontWeight='900' fontSize={['md',  "lg", 'x-large']}>{advert.title}</Text>
               <Text>{advert.text}</Text>
               <Image src={advert.img} alt={advert.title} borderRadius="md" />
               <Text>

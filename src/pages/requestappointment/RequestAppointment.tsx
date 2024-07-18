@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import MainLayout from '../../Layout/MainLayout';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { Experience, Service } from '../profile/ProfileBio';
-import { Box, Text, Spinner, Image, Input, Textarea, Button, Checkbox, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import MainLayout from '../../Layout/MainLayout';
+import {
+  Box,
+  Text,
+  Spinner,
+  Image,
+  Input,
+  Textarea,
+  Button,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Avatar,
+  VStack,
+  HStack,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import { AdvertComp, SomethingIs } from '../../Components';
+import { Experience, Service } from '../profile/ProfileBio';
+import { imgImg } from '../../assets';
 
 const RequestAppointment: React.FC = () => {
   const queryParam = new URLSearchParams(location.search).get('query');
@@ -25,8 +42,7 @@ const RequestAppointment: React.FC = () => {
       const doctorDocRef = doc(db, 'users', uid);
       const doctorDoc = await getDoc(doctorDocRef);
       if (doctorDoc.exists()) {
-        const doctorData = doctorDoc.data();
-        setDoctorData(doctorData);
+        setDoctorData(doctorDoc.data());
       } else {
         console.log('No such document in doctors collection!');
       }
@@ -61,113 +77,135 @@ const RequestAppointment: React.FC = () => {
 
   return (
     <MainLayout>
-      <Box p={4}>
+      <Box p={4} className='texts' maxW="1400px"  mx="auto" mb="5rem">
         {loading ? (
           <Spinner size="xl" />
         ) : doctorData ? (
-          <Box> 
-                        <Box className=""  display={['block', 'block', 'flex']} gap='4' alignItems='center'> 
-            <Box className=""w={['100%', '100%', "60%"]} > 
-            <Text fontSize="2xl">Request an appointment with Dr. {doctorData.name}</Text>
-            <Image src={doctorData.imageUrl} alt={doctorData.name} boxSize="150px" borderRadius="full" mt={4} />
-            <Text mt={2} fontSize="lg">Specialization: {doctorData.specialization}</Text>
-            <Text mt={2} fontSize="lg">Location: {doctorData.workLocation}</Text>
-            <Text mt={2} fontSize="lg">Phone: {doctorData.phoneNumber}</Text>
-            <Text mt={2} fontSize="lg">Email: {doctorData.email}</Text>
-            <Text mt={2} fontSize="lg">Bio: {doctorData.bio}</Text>
+          <Box>
+            <Box display="grid"  pos="relative" >
+              <Image
+                w="full"
+                h="250px"
+                objectFit="cover"
+                src={imgImg}
+                alt="Doctor Banner"
+              />
+              <Box
+                bg="white"
+                borderRadius="xl"
+                py={4}
+                px={6}
+                shadow="sm"
+                display='flex' flexDir={['column','row']} alignItems='center' gap='3'
+                // spacing={4}
+                pos="absolute"
+                bottom="-50px"
+                left="10%"
+                right="10%"
+              >
+                <Avatar
+                  src={doctorData.imageUrl}
+                  name={doctorData.name}
+                  size="xl"
+                  borderRadius="full"
+                  boxShadow="md"
+                />
+                <VStack  align="start">
+                  <Text fontSize={[  'md', 'lg', 'x-large', "2xl"]} fontWeight="bold">
+                    Request an appointment with {doctorData.name}
+                  </Text>
+                  <Text fontSize={['sm','md', "lg"]}>{doctorData.workLocation}. Available Mon-Fri at 8:00am - 5:00pm</Text>
+                </VStack>
+              </Box>
             </Box>
-            <AdvertComp />
-       </Box>
-      <div className="">
-      <Box mt={4}>
-  <Text fontSize="xl">Services Offered</Text>
-  {doctorData.services && doctorData.services.length > 0 ? (
-    doctorData.services.map((service: Service, index: number) => (
-      <Text key={index} mt={2}>{service.service}: ${service.price}</Text>
-    ))
-  ) : (
-    <Text>No services listed.</Text>
-  )}
-</Box>
-
-<Box mt={4}>
-  <Text fontSize="xl">Experience</Text>
-  {doctorData.experiences && doctorData.experiences.length > 0 ? (
-    doctorData.experiences.map((experience: Experience, index: number) => (
-      <Text key={index} mt={2}>{experience.position} at {experience.workplace} ({experience.startYear} - {experience.endYear})</Text>
-    ))
-  ) : (
-    <Text>No experience listed.</Text>
-  )}
-</Box>
-
-
-            <SomethingIs />
-      </div>
-
-            <Box mt={8}>
-              <Text fontSize="xl" mb={4}>Appointment Request Form</Text>
+            <Box mt="6rem" p={4} borderRadius="lg" shadow="sm" bg="white">
+              <Text fontSize={['sm','md', "lg"]} fontWeight="bold" mb={2}>
+                Doctor's Profile
+              </Text>
+              <Text w={['full','80%','70%','60%']} fontSize={['sm','md']} mb={2}>{doctorData.bio}</Text>
+              <Text mb={2} fontSize={['sm','md']} >
+                Specialization: {doctorData.specialization}
+              </Text>
+              <Text mb={2} fontSize={['sm','md']} >
+                Contact: <strong>{doctorData.phoneNumber}</strong> |{' '}
+                <strong>{doctorData.email}</strong>
+              </Text>
+            </Box>
+            <SimpleGrid columns={[1, 1, 2]} spacing={[4,5,6]} mt='3rem'>
+              <Box p={4} borderRadius="lg" shadow="sm" bg="white">
+                <Text fontSize={['sm','md', "lg"]} fontWeight="bold" mb={2}>
+                  Services Offered
+                </Text>
+                {doctorData.services && doctorData.services.length > 0 ? (
+                  doctorData.services.map((service: Service, index: number) => (
+                    <Text key={index} mt={2}>
+                      {service.service}: ${service.price}
+                    </Text>
+                  ))
+                ) : (
+                  <Text>No services listed.</Text>
+                )}
+              </Box>
+              <Box p={4} borderRadius="lg" shadow="sm" bg="white">
+                <Text fontSize={['sm','md', "lg"]} fontWeight="bold" mb={2}>
+                  Experience
+                </Text>
+                {doctorData.experiences && doctorData.experiences.length > 0 ? (
+                  doctorData.experiences.map((experience: Experience, index: number) => (
+                    <Text key={index} mt={2}>
+                      {experience.position} at {experience.workplace} ({experience.startYear} - {experience.endYear})
+                    </Text>
+                  ))
+                ) : (
+                  <Text>No experience listed.</Text>
+                )}
+              </Box>
+            </SimpleGrid>
+            <Box w={['85%', '70%', '60%',  "50%"]} mx='auto' mt='4rem'>
+              <AdvertComp />
+            </Box>
+            <Box mt='6rem' p={4} borderRadius="lg" shadow="md" bg="white" w={['full', '90%','80%','70%',]} mx='auto' fontSize={['sm','md']} >
+              <Text fontSize="xl" fontWeight='900' textAlign='center' mb='3rem'>
+                Appointment Request Form
+              </Text>
               <form onSubmit={formik.handleSubmit}>
                 <FormControl isInvalid={formik.touched.appointmentDate && !!formik.errors.appointmentDate} mb={4}>
-                  <FormLabel htmlFor="appointmentDate">What date would you like for your appointment?</FormLabel>
-                  <Input
-                    id="appointmentDate"
-                    type="date"
-                    {...formik.getFieldProps('appointmentDate')}
-                  />
+                  <FormLabel htmlFor="appointmentDate">Preferred Appointment Date</FormLabel>
+                  <Input id="appointmentDate" type="date" {...formik.getFieldProps('appointmentDate')} />
                   <FormErrorMessage>{formik.errors.appointmentDate as string}</FormErrorMessage>
                 </FormControl>
-
                 <FormControl mb={4}>
-                  <FormLabel htmlFor="notes">Any notes or details about your appointment</FormLabel>
-                  <Textarea
-                    id="notes"
-                    {...formik.getFieldProps('notes')}
-                  />
+                  <FormLabel htmlFor="notes">Additional Notes</FormLabel>
+                  <Textarea id="notes" {...formik.getFieldProps('notes')} />
                 </FormControl>
-
                 <FormControl isInvalid={formik.touched.userName && !!formik.errors.userName} mb={4}>
                   <FormLabel htmlFor="userName">Your Name</FormLabel>
-                  <Input
-                    id="userName"
-                    type="text"
-                    {...formik.getFieldProps('userName')}
-                  />
+                  <Input id="userName" type="text" {...formik.getFieldProps('userName')} />
                   <FormErrorMessage>{formik.errors.userName as string}</FormErrorMessage>
                 </FormControl>
-
                 <FormControl isInvalid={formik.touched.userEmail && !!formik.errors.userEmail} mb={4}>
                   <FormLabel htmlFor="userEmail">Your Email</FormLabel>
-                  <Input
-                    id="userEmail"
-                    type="email"
-                    {...formik.getFieldProps('userEmail')}
-                  />
+                  <Input id="userEmail" type="email" {...formik.getFieldProps('userEmail')} />
                   <FormErrorMessage>{formik.errors.userEmail as string}</FormErrorMessage>
                 </FormControl>
-
                 <FormControl isInvalid={formik.touched.userPhone && !!formik.errors.userPhone} mb={4}>
-                  <FormLabel htmlFor="userPhone">Your Telephone</FormLabel>
-                  <Input
-                    id="userPhone"
-                    type="text"
-                    {...formik.getFieldProps('userPhone')}
-                  />
+                  <FormLabel htmlFor="userPhone">Your Phone Number</FormLabel>
+                  <Input id="userPhone" type="text" {...formik.getFieldProps('userPhone')} />
                   <FormErrorMessage>{formik.errors.userPhone as string}</FormErrorMessage>
                 </FormControl>
-
                 <FormControl isInvalid={formik.touched.confirmation && !!formik.errors.confirmation} mb={4}>
-                  <Checkbox
-                    id="confirmation"
-                    {...formik.getFieldProps('confirmation')}
-                  >
-                    I understand this is an appointment request, and must wait for the practice to confirm the appointment with me.
+                  <Checkbox id="confirmation" {...formik.getFieldProps('confirmation')}>
+                    I understand this is an appointment request, and I must wait for confirmation.
                   </Checkbox>
                   <FormErrorMessage>{formik.errors.confirmation as string}</FormErrorMessage>
                 </FormControl>
-
-                <Button type="submit" colorScheme="teal" mt={4}>Submit Request</Button>
+                <Button type="submit" colorScheme="teal" mt={4}>
+                  Submit Request
+                </Button>
               </form>
+            </Box>
+            <Box mt={4}>
+              <SomethingIs />
             </Box>
           </Box>
         ) : (

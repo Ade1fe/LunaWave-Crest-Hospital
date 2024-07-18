@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <Box bg="#541e1b" px={4} py={2}>
+    <Box bg="#541e1b" px={4} py={2} pos='sticky' top='0px' zIndex='999'>
       <Flex justify="space-between" align="center" maxW='1340px' mx='auto'>
         <ChakraLink as={Link} to="/" _hover={{ textDecoration: "none" }}>
           <Text fontSize="xl" fontWeight="bold" color="white">

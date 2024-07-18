@@ -223,14 +223,17 @@ const ProfileBio = () => {
   };
 
   return (
-    <Box>
+    <Box maxW='1400px' mx='auto'>
       {userData ? (
         <>
           <Box display="grid" pos='relative' maxW='1600px' mx='auto' mb='0rem'>
             <Box  h='250px' w='full'>
               <Image w='full' h='full' objectFit='cover' src='https://pbs.twimg.com/profile_banners/1506565313751564289/1674381564/1500x500' />
             </Box>
-            <Box display={['block', 'flex']} bg='white' w={['95%', '93%', '90%', '94%', '96%']} borderRadius='xl' py='4' px={['2','3','4']} shadow='md' gap="3" alignItems="center" pos='absolute' bottom='-70px' left={['10px','20px','30px']}>
+            <Box display={['block', 'flex']} bg='white'  borderRadius='xl' py='4' px={['2','3','4']} shadow='md' gap="3" alignItems="center"    pos="absolute"
+                bottom="-50px"
+                left="10%"
+                right="10%">
               <Box display='flex' alignItems='center' justifyContent='center' overflow='hidden' boxSize={['80px', '100px','120px','135px', "150px"]} borderRadius='50%' shadow='md'>
                 {userData.imageUrl ? (
                   <Image borderRadius="full" w='full' h='full' objectFit='cover'  src={userData.imageUrl} alt="Profile Image" />
@@ -251,8 +254,8 @@ const ProfileBio = () => {
                 <Text fontSize="2xl" fontWeight="bold">{userData.name}</Text>
                 <Text>{userData.role === 'doctor' ? 'Doctor' : 'Patient'}</Text>
               </Box>
-          <Box display={['block', 'block', 'flex']} gap='2' alignItems='flex-start' className="">
-          <Box  w={['100%', '100%', "60%"]} >
+          <Box display={['block', 'block', 'flex']} gap='4' alignItems='flex-start' className="">
+          <Box  w={['100%', '100%', "66%"]} >
               <Box display="flex" alignItems="center">
                 <Icon as={CgProfile} w={[4 ,5, 6]} h={[4,5,6]} mr={2} />
                 <Text fontSize="xl" fontWeight="bold">Profile</Text>
@@ -304,8 +307,9 @@ const ProfileBio = () => {
               </Box>
             
             </Box>
-
+            <Box w={['85%', '70%', '50%',  "30%"]} mx='auto' mt={['2rem', '2rem', '2rem', '0']}>
             <AdvertComp />
+            </Box>
           </Box>
             {userData.role === 'doctor' && (
               <Box mt="8" >
