@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from '../../Layout/MainLayout';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase'; 
 import { Box, Text, Spinner, List, ListItem, Image, Button, Input, InputGroup, Avatar } from '@chakra-ui/react';
 import { AdvertComp } from '..';
@@ -26,6 +26,8 @@ const SearchDoctors: React.FC = () => {
   const queryParam = new URLSearchParams(location.search).get('query');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const doctorsPerPage = 1; // Number of doctors to display per page
 
   // Fetch user images separately
   useEffect(() => {
@@ -80,6 +82,23 @@ const SearchDoctors: React.FC = () => {
     navigate(`/requestappointment?query=${encodeURIComponent(doctorId)}`);
   };
 
+  // Pagination Logic
+  const indexOfLastDoctor = currentPage * doctorsPerPage;
+  const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
+  const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
+  const totalPages = Math.ceil(doctors.length / doctorsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(prevPage => prevPage - 1);
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <MainLayout>
@@ -104,27 +123,25 @@ const SearchDoctors: React.FC = () => {
         ) : (
           <Box display={['block', 'block', 'flex']} gap='4' alignItems='flex-start'>
             <Box w={['100%', '100%', "60%"]}>
-              {doctors.length > 0 ? (
+              {currentDoctors.length > 0 ? (
                 <List spacing={3}>
-                  {doctors.map((doctor) => (
+                  {currentDoctors.map((doctor) => (
                     <ListItem key={doctor.id} bg='red' my='3' display='flex' justifyContent='space-between' px={['3']}>
-                           <Box display={['flex']} alignItems='center' gap='2'>
-                           {doctor.imageUrl ? (
-                        <Image boxSize={['150px']} borderRadius='50%' src={doctor.imageUrl} alt="Doctor Image"  />
-                      ) : (
-                        <Avatar boxSize={['150px']}  name={doctor.name} size="md" />
-                      )}
-                  
-                       <div className="">
-                       <Text fontSize="lg">{doctor.name}</Text>
-                        <Text fontSize="lg">{doctor.specialization}</Text>
-                        <Text fontSize="lg">{doctor.workLocation}</Text>
-                       </div>
+                      <Box display={['flex']} alignItems='center' gap='2'>
+                        {doctor.imageUrl ? (
+                          <Image boxSize={['150px']} borderRadius='50%' src={doctor.imageUrl} alt="Doctor Image" />
+                        ) : (
+                          <Avatar boxSize={['150px']} name={doctor.name} size="md" />
+                        )}
+                        <div className="">
+                          <Text fontSize="lg">{doctor.name}</Text>
+                          <Text fontSize="lg">{doctor.specialization}</Text>
+                          <Text fontSize="lg">{doctor.workLocation}</Text>
+                        </div>
                       </Box>
                       <Box onClick={() => makeAnAppointment(doctor.id)}>
                         <Text fontSize="lg" cursor="pointer">Make An Appointment</Text>
                       </Box>
-                
                     </ListItem>
                   ))}
                 </List>
@@ -133,6 +150,39 @@ const SearchDoctors: React.FC = () => {
               )}
             </Box>
             <AdvertComp />
+          </Box>
+        )}
+
+        {/* Pagination */}
+        {doctors.length > doctorsPerPage && (
+          <Box mt={4} display="flex" justifyContent="center" alignItems="center">
+            <Button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              colorScheme="teal"
+              mr={2}
+            >
+              Previous
+            </Button>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index}
+                onClick={() => goToPage(index + 1)}
+                variant={currentPage === index + 1 ? "solid" : "outline"}
+                colorScheme="teal"
+                mr={2}
+              >
+                {index + 1}
+              </Button>
+            ))}
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              colorScheme="teal"
+              ml={2}
+            >
+              Next
+            </Button>
           </Box>
         )}
       </Box>

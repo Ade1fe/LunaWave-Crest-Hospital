@@ -231,11 +231,11 @@ const ProfileBio = () => {
               <Image w='full' h='full' objectFit='cover' src='https://pbs.twimg.com/profile_banners/1506565313751564289/1674381564/1500x500' />
             </Box>
             <Box display={['block', 'flex']} bg='white' w={['95%', '93%', '90%', '94%', '96%']} borderRadius='xl' py='4' px={['2','3','4']} shadow='md' gap="3" alignItems="center" pos='absolute' bottom='-70px' left={['10px','20px','30px']}>
-              <Box overflow='hidden' boxSize={['80px', '100px','120px','135px', "150px"]} borderRadius='50%' shadow='md'>
+              <Box display='flex' alignItems='center' justifyContent='center' overflow='hidden' boxSize={['80px', '100px','120px','135px', "150px"]} borderRadius='50%' shadow='md'>
                 {userData.imageUrl ? (
                   <Image borderRadius="full" w='full' h='full' objectFit='cover'  src={userData.imageUrl} alt="Profile Image" />
                 ) : (
-                  <Avatar size="xl" name={userData.name} />
+                  <Avatar borderRadius="full" w='full' h='full' objectFit='cover'   name={userData.name} />
                 )}
               </Box>
               <Box display={['grid']} mt={['2','0']} overflow='hidden' gap="1" cursor='pointer' >

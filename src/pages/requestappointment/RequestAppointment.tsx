@@ -66,7 +66,7 @@ const RequestAppointment: React.FC = () => {
           <Spinner size="xl" />
         ) : doctorData ? (
           <Box> 
-                        <Box className=""  display={['block', 'block', 'flex']} gap='4' alignItems='flex-start'> 
+                        <Box className=""  display={['block', 'block', 'flex']} gap='4' alignItems='center'> 
             <Box className=""w={['100%', '100%', "60%"]} > 
             <Text fontSize="2xl">Request an appointment with Dr. {doctorData.name}</Text>
             <Image src={doctorData.imageUrl} alt={doctorData.name} boxSize="150px" borderRadius="full" mt={4} />
@@ -75,32 +75,32 @@ const RequestAppointment: React.FC = () => {
             <Text mt={2} fontSize="lg">Phone: {doctorData.phoneNumber}</Text>
             <Text mt={2} fontSize="lg">Email: {doctorData.email}</Text>
             <Text mt={2} fontSize="lg">Bio: {doctorData.bio}</Text>
-            <Text mt={2} fontSize="lg">Age: {doctorData.age}</Text>
             </Box>
             <AdvertComp />
        </Box>
       <div className="">
       <Box mt={4}>
-              <Text fontSize="xl">Services Offered</Text>
-              {doctorData.services.length > 0 ? (
-                doctorData.services.map((service: Service, index: number) => (
-                  <Text key={index} mt={2}>{service.service}: ${service.price}</Text>
-                ))
-              ) : (
-                <Text>No services listed.</Text>
-              )}
-            </Box>
+  <Text fontSize="xl">Services Offered</Text>
+  {doctorData.services && doctorData.services.length > 0 ? (
+    doctorData.services.map((service: Service, index: number) => (
+      <Text key={index} mt={2}>{service.service}: ${service.price}</Text>
+    ))
+  ) : (
+    <Text>No services listed.</Text>
+  )}
+</Box>
 
-            <Box mt={4}>
-              <Text fontSize="xl">Experience</Text>
-              {doctorData.experiences.length > 0 ? (
-                doctorData.experiences.map((experience: Experience, index: number) => (
-                  <Text key={index} mt={2}>{experience.position} at {experience.workplace} ({experience.startYear} - {experience.endYear})</Text>
-                ))
-              ) : (
-                <Text>No experience listed.</Text>
-              )}
-            </Box>
+<Box mt={4}>
+  <Text fontSize="xl">Experience</Text>
+  {doctorData.experiences && doctorData.experiences.length > 0 ? (
+    doctorData.experiences.map((experience: Experience, index: number) => (
+      <Text key={index} mt={2}>{experience.position} at {experience.workplace} ({experience.startYear} - {experience.endYear})</Text>
+    ))
+  ) : (
+    <Text>No experience listed.</Text>
+  )}
+</Box>
+
 
             <SomethingIs />
       </div>

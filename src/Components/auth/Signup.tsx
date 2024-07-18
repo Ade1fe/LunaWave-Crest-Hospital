@@ -91,7 +91,7 @@ import {
               isClosable: true,
             });
           }
-          navigate('/'); // Navigate to home page or dashboard after signup
+          navigate('/');
         }
       } catch (error) {
         toast({

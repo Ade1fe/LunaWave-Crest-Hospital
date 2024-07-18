@@ -2,16 +2,23 @@ import { Box, Button, Input, FormControl, FormLabel, Heading, VStack } from '@ch
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '../../Layout/MainLayout';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Add your login logic here
-    console.log('Login with:', { email, password });
-    navigate('/'); // Navigate to home page or dashboard after login
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log('Login successful:', { email });
+      navigate('/'); // Navigate to home page or dashboard after login
+    } catch (error) {
+      console.error('Error logging in:', error);
+      // Handle error appropriately (e.g., show error message to the user)
+    }
   };
 
   return (
