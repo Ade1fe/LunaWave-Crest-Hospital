@@ -27,7 +27,7 @@ export interface Experience {
 const ProfileBio = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<any>(null);
-  const [doctorData, setDoctorData] = useState<any>(null);
+  const [, setDoctorData] = useState<any>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [bio, setBio] = useState('');
