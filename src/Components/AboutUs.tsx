@@ -1,5 +1,4 @@
 import { Box, Heading, Text, Image, SimpleGrid, Stack, Divider } from "@chakra-ui/react";
-import React from 'react';
 import MainLayout from "../Layout/MainLayout";
 
 const AboutUs = () => {

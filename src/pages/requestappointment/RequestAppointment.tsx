@@ -18,7 +18,6 @@ import {
   FormErrorMessage,
   Avatar,
   VStack,
-  HStack,
   SimpleGrid,
 } from '@chakra-ui/react';
 import { AdvertComp, SomethingIs } from '../../Components';

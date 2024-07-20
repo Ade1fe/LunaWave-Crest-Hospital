@@ -1,5 +1,4 @@
 import { Box, Button, Text, useDisclosure } from "@chakra-ui/react";
-import React from 'react'
 import Form from './Form' // Adjust the import path as necessary
 
 const SomethingIs = () => {

@@ -7,7 +7,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { CgProfile } from 'react-icons/cg';
 import { FcAbout } from 'react-icons/fc';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import { MdOutlineEmail, MdOutlinePhone } from 'react-icons/md';
+import { MdOutlinePhone } from 'react-icons/md';
 import { AdvertComp } from '../../Components';
 import { SlCalender } from 'react-icons/sl';
 

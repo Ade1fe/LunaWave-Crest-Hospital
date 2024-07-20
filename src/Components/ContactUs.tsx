@@ -1,9 +1,7 @@
 import { Box, Text, SimpleGrid, Stack, Input, Textarea, Button, FormControl, FormLabel, FormErrorMessage, useToast, Icon, Link } from "@chakra-ui/react";
 import React, { useState } from 'react';
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import {  FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
-import { GrTwitter } from "react-icons/gr";
-import { ImInstagram } from "react-icons/im";
 import MainLayout from "../Layout/MainLayout";
 
 const ContactUs = () => {

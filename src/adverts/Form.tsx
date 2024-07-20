@@ -1,5 +1,5 @@
-import { Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Textarea, useDisclosure, useToast } from '@chakra-ui/react'
-import React, { useState, FC } from 'react'
+import { Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Textarea, useToast } from '@chakra-ui/react'
+import  { useState, FC } from 'react'
 
 interface FormProps {
   isOpen: boolean;
@@ -7,7 +7,7 @@ interface FormProps {
   onClose: () => void;
 }
 
-const Form: FC<FormProps> = ({ isOpen, onOpen, onClose }) => {
+const Form: FC<FormProps> = ({ isOpen, onClose }) => {
   const toast = useToast()
   const [complaint, setComplaint] = useState("")
 

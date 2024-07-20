@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Tooltip, keyframes } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { FaChevronLeft } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
 
 const bounce = keyframes`

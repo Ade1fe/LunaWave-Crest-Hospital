@@ -1,5 +1,5 @@
-import { Box, Text, Heading, Button, Flex, Image, VStack } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import { Box, Text, Button, Flex, Image, VStack } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 import { keyframes } from '@emotion/react';
 
 // Define keyframes for animations
