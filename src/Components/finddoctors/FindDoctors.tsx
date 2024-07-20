@@ -25,7 +25,7 @@ const FindDoctors = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button  _hover={{bg: "orange.800"}} color='white' bg="#541e1b" onClick={handleSearch} colorScheme="teal" ml={2}>
+        <Button  _hover={{bg: "orange.800"}} color='white' bg="#541e1b" onClick={handleSearch} colorScheme="teal" borderRadius='0'>
           Search
         </Button>
       </InputGroup>
