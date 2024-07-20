@@ -1,4 +1,7 @@
-// export {default as BackPage} 
+// export {default as Services} 
+export {default as Services} from './Services';
+export {default as ContactUs}  from './ContactUs';
+export {default as AboutUs} from './AboutUs';
 export {default as BackPage} from './BackPage';
 export {default as AdvertComp}  from '../adverts/AdvertComp';
 export {default as Signup}  from './auth/Signup';

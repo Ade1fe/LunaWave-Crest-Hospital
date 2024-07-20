@@ -204,7 +204,7 @@ const SearchDoctors: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button _hover={{bg: "orange.800"}} color='white' bg="#541e1b" colorScheme="teal" ml={2} onClick={() => navigate(`/doctors?query=${encodeURIComponent(searchQuery)}`)}>
+            <Button _hover={{bg: "orange.800"}} borderRadius='0' color='white' bg="#541e1b" colorScheme="teal" onClick={() => navigate(`/doctors?query=${encodeURIComponent(searchQuery)}`)}>
               Search
             </Button>
           </InputGroup>
